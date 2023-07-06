@@ -1,32 +1,5 @@
 #!/usr/bin/env bash
-
-# Install required packages
-sudo apt-get update
-sudo apt-get install -y net-tools
-
-# Check if Nginx is already listening on port 80
-netstat -tuln | grep ':80'
-if [ $? -eq 0 ]; then
-    echo "Nginx is already listening on port 80."
-    exit 0
-fi
-
-# Verify Nginx configuration
-sudo nginx -t
-if [ $? -ne 0 ]; then
-    echo "Nginx configuration test failed. Fix the configuration and try again."
-    exit 1
-fi
-
-# Restart Nginx
+# This script replaces the word 'enabled' wit 'available' in
+# ../sites-enabled/default to enable nginx to listen to port 80
+sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 sudo service nginx restart
-
-# Check if Nginx is now listening on port 80
-netstat -tuln | grep ':80'
-if [ $? -ne 0 ]; then
-    echo "Nginx is still not listening on port 80. Check for other processes using port 80."
-    exit 1
-fi
-
-echo "Nginx is now listening on port 80."
-exit 0
