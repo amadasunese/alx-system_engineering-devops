@@ -1,30 +1,45 @@
 #!/usr/bin/env bash
-# script to report information about server domains
-# shellcheck disable=SC2086
-check_domain() {
-	# awk will use record seperator of space
-	# space sperated list of sub domains
-	SUBDOMAINS='www lb-01 web-01 web-02'
+# Function to display information about a specific subdomain
 
-	if [ -z "$1" ]; then
-		exit
-	fi
-	# no sub domain specified, do all
-	if [ -z "$2" ]; then
-		echo "$SUBDOMAINS" | awk -v domain="$1"\
-		'BEGIN { RS=" " }
-		{split($0,ARR," ");
-		cmd = "dig " ARR[1]"."domain " | grep -A1 \"ANSWER SECTION:\" | tail -n1";
-		system(cmd)
-		close(cmd)}' | awk\
-		'{
-		split($0, DOMS, ".");
-		print "The subdomain " DOMS[1] " is a " $4 " record and points to " $5}'
-	else
-		dig "$2.$1" | grep -A1 "ANSWER SECTION:" | tail -n1 | awk\
-		'{
-		split($0, DOMS, ".");
-		print "The subdomain " DOMS[1] " is a " $4 " record and points to " $5}'
-	fi
+get_subdomain_info() {
+    local domain="$1"
+    local subdomain="$2"
+
+    # Retrieve the DNS record for the subdomain
+    local dns_record=$(dig +short "$subdomain.$domain" | awk '{print $1}')
+
+    # Determine the record type and destination
+    local record_type=""
+    local destination=""
+
+    if [[ -n "$dns_record" ]]; then
+        if grep -qE '^[0-9.]+$' <<< "$dns_record"; then
+            record_type="A"
+            destination="$dns_record"
+        else
+            record_type="CNAME"
+            destination="$dns_record"
+        fi
+    fi
+
+    # Print the information
+    echo "The subdomain $subdomain is a $record_type record and points to $destination"
 }
-check_domain "$1" "$2"
+
+# Main script logic
+if [[ $# -lt 1 || $# -gt 2 ]]; then
+    echo "Usage: $0 domain [subdomain]"
+    exit 1
+fi
+
+domain="$1"
+
+if [[ $# -eq 1 ]]; then
+    subdomains=("www" "lb-01" "web-01" "web-02")
+else
+    subdomains=("$2")
+fi
+
+for subdomain in "${subdomains[@]}"; do
+    get_subdomain_info "$domain" "$subdomain"
+done
