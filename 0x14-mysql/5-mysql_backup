@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+#script that generates a MySQL dump
+
+# MySQL credentials
+MYSQL_USER="root"
+MYSQL_PASSWORD="$1"
+
+# Output file and archive name
+DATE=$(date +'%d-%m-%Y')
+DUMP_FILE="backup.sql"
+ARCHIVE_NAME="$DATE.tar.gz"
+
+# Generate MySQL dump with password if provided
+if [ -z "$MYSQL_PASSWORD" ]; then
+    mysqldump -u $MYSQL_USER --all-databases > $DUMP_FILE
+else
+    mysqldump -u $MYSQL_USER -p$MYSQL_PASSWORD --all-databases > $DUMP_FILE
+fi
+
+# Check if the dump was successful
+if [ $? -eq 0 ]; then
+    echo "MySQL dump created successfully."
+else
+    echo "Failed to create the MySQL dump. Check the credentials and try again."
+    exit 1
+fi
+
+# Create the tar.gz archive
+tar -czf $ARCHIVE_NAME $DUMP_FILE
+
+# Remove the temporary dump file
+rm $DUMP_FILE
+
+# Check if the archive was created successfully
+if [ $? -eq 0 ]; then
+    echo "Backup archive created: $ARCHIVE_NAME"
+else
+    echo "Failed to create the backup archive."
+fi
