@@ -1,5 +1,8 @@
 #!/usr/bin/python3
-# Python script that returns information using RESTful API
+
+"""
+Python script that returns information using RESTful API
+"""
 
 from requests import get
 from sys import argv
