@@ -1,14 +1,13 @@
 #!/usr/bin/python3
-# Python script that, using this REST API, for a given employee ID,
-# returns information about his/her TODO list progress.
+
+# Python script to export data in the CSV format
 
 import requests
-
+import csv
 
 def get_employee_todo_progress(employee_id):
     base_url = 'https://jsonplaceholder.typicode.com/users'
-    todo_url = f'https://jsonplaceholder.typicode.com/todos?userId=
-        {employee_id}'
+    todo_url = f'https://jsonplaceholder.typicode.com/todos?userId={employee_id}'
 
     try:
         # Fetch employee data
@@ -23,12 +22,28 @@ def get_employee_todo_progress(employee_id):
             total_tasks = len(todo_data)
             completed_tasks = sum(task['completed'] for task in todo_data)
 
-            print(f"Employee {employee_name} is done with tasks ({completed_tasks}/
-                    {total_tasks}):")
+            print(f"Employee {employee_name} is done with tasks ({completed_tasks}/{total_tasks}):")
 
             for task in todo_data:
                 if task['completed']:
                     print(f"\t{task['title']}")
+
+            # Export data to CSV file
+            csv_filename = f"{employee_id}.csv"
+            with open(csv_filename, mode='w', newline='') as csv_file:
+                fieldnames = ['USER_ID', 'USERNAME', 'TASK_COMPLETED_STATUS', 'TASK_TITLE']
+                writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+                writer.writeheader()
+                for task in todo_data:
+                    writer.writerow({
+                        'USER_ID': employee_id,
+                        'USERNAME': employee_name,
+                        'TASK_COMPLETED_STATUS': task['completed'],
+                        'TASK_TITLE': task['title']
+                    })
+
+            print(f"Data exported to {csv_filename}")
 
         else:
             print(f"Error: Unable to fetch data for Employee ID {employee_id}")

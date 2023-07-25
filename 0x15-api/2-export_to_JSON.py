@@ -1,14 +1,13 @@
 #!/usr/bin/python3
-# Python script that, using this REST API, for a given employee ID,
-# returns information about his/her TODO list progress.
+
+# export data in the JSON format.
 
 import requests
-
+import json
 
 def get_employee_todo_progress(employee_id):
     base_url = 'https://jsonplaceholder.typicode.com/users'
-    todo_url = f'https://jsonplaceholder.typicode.com/todos?userId=
-        {employee_id}'
+    todo_url = f'https://jsonplaceholder.typicode.com/todos?userId={employee_id}'
 
     try:
         # Fetch employee data
@@ -23,18 +22,26 @@ def get_employee_todo_progress(employee_id):
             total_tasks = len(todo_data)
             completed_tasks = sum(task['completed'] for task in todo_data)
 
-            print(f"Employee {employee_name} is done with tasks ({completed_tasks}/
-                    {total_tasks}):")
+            print(f"Employee {employee_name} is done with tasks ({completed_tasks}/{total_tasks}):")
 
-            for task in todo_data:
-                if task['completed']:
-                    print(f"\t{task['title']}")
+            # Create JSON data
+            json_data = {
+                "USER_ID": [{"task": task['title'], "completed": task['completed'], "username": employee_name} for task in todo_data]
+            }
+
+            # Writing data to JSON file
+            json_filename = f"{employee_id}.json"
+            with open(json_filename, 'w') as json_file:
+                json.dump(json_data, json_file, indent=4)
+
+            print(f"\nData exported to {json_filename}")
 
         else:
             print(f"Error: Unable to fetch data for Employee ID {employee_id}")
 
     except requests.exceptions.RequestException as e:
         print(f"Error: {e}")
+
 
 if __name__ == "__main__":
     import sys
