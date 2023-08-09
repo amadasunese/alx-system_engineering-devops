@@ -6,6 +6,10 @@ import requests
 
 
 def top_ten(subreddit):
+    """
+    A function that print top ten titles from reddit
+    """
+
     base_url = f"https://www.reddit.com/r/{subreddit}/hot.json"
 
     try:
