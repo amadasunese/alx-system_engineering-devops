@@ -4,10 +4,12 @@ a function that queries the Reddit API and prints the titles
 """
 
 import requests
-"""
-a function that queries the Reddit API and prints the titles
-"""
+
+
 def top_ten(subreddit):
+    """
+    a function that queries the Reddit API and prints the titles
+    """
     url = 'https://www.reddit.com/r/{}/hot.json?show="all"&limit=10'.format(
         subreddit)
     headers = {'User-Agent': 'Python/1.0(Holberton School 0x16)'}
