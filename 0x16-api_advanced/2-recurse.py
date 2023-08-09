@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Recursive function that queries the Reddit API and returns a list
+a recursive function that queries the Reddit API and returns a list
 """
 import requests
 
@@ -14,7 +14,7 @@ def recurse(subreddit, hot_list=None, after=None):
 
     try:
         response = requests.get(base_url, params=params)
-        response.raise_for_status()  # Check for any HTTP error
+        response.raise_for_status()
 
         data = response.json()
         posts = data.get('data', {}).get('children', [])
