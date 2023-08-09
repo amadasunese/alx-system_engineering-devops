@@ -3,13 +3,14 @@
 A function that queries the Reddit API and returns the number of subscribers
 import requests
 """
+import requests
 
 
 def number_of_subscribers(subreddit):
 
     headers = {'User-Agent': 'CustomUserAgent'}
 
-    url = f"https://www.reddit.com/r/{subreddit}/about.json"
+    url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit)
 
     response = requests.get(url, headers=headers, allow_redirects=False)
 
@@ -30,4 +31,4 @@ def number_of_subscribers(subreddit):
 
 subreddit_name = "programming"
 subscribers_count = number_of_subscribers(subreddit_name)
-print(f"The subreddit '{subreddit_name}' has {subscribers_count} subscribers.")
+print("The subreddit '{subreddit_name}' has {subscribers_count} subscribers.")
