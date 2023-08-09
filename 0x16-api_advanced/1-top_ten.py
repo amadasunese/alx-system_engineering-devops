@@ -1,22 +1,15 @@
 #!/usr/bin/python3
 """
-a function that queries the Reddit API and prints the titles
+A function that print top ten titles from reddit
 """
-
 import requests
 
 
 def top_ten(subreddit):
-    """
-    a function that queries the Reddit API and prints the titles
-    """
-    url = 'https://www.reddit.com/r/{}/hot.json?show="all"&limit=10'.format(
-        subreddit)
-    headers = {'User-Agent': 'Python/1.0(Holberton School 0x16)'}
+    base_url = f"https://www.reddit.com/r/{subreddit}/hot.json"
 
     try:
-        response = requests.get(url, headers=headers,
-                                params={'limit': 10})
+        response = requests.get(base_url, params={'limit': 10})
         response.raise_for_status()
 
         data = response.json()
