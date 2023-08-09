@@ -31,4 +31,4 @@ def number_of_subscribers(subreddit):
 
 subreddit_name = "programming"
 subscribers_count = number_of_subscribers(subreddit_name)
-print("The subreddit '{subreddit_name}' has {subscribers_count} subscribers.")
+print(subscribers_count)
