@@ -7,11 +7,12 @@ import requests
 
 
 def top_ten(subreddit):
-    base_url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    headers = {'User-Agent': 'Python/1.0(Holberton School 0x16)')
+    url = 'https://www.reddit.com/r/{}/hot.json?show="all"&limit=10'.format(
+        subreddit)
+    headers = {'User-Agent': 'Python/1.0(Holberton School 0x16)'}
 
     try:
-        response = requests.get(base_url, headers=headers,
+        response = requests.get(url, headers=headers,
                                 params={'limit': 10})
         response.raise_for_status()
 
