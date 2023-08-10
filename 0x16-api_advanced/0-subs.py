@@ -1,14 +1,18 @@
 #!/usr/bin/python3
 """
-A function that queries the Reddit API and returns the number of subscribers
-import requests
+A function that queries the Reddit API
 """
 import requests
+from requests import get
 
 
 def number_of_subscribers(subreddit):
+    """
+    function that queries the Reddit API and returns the number of subscribers
+    (not active users, total subscribers) for a given subreddit.
+    """
 
-    headers = {'User-Agent': 'CustomUserAgent'}
+    headers = {'User-Agent': 'Chrome/115.0.0.0 Safari/537.36'}
 
     url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit)
 
