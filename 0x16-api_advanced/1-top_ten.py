@@ -1,33 +1,21 @@
 #!/usr/bin/python3
-"""
-A function that print top ten titles from reddit
-"""
+"""a function that queries the Reddit API."""
 import requests
 
 
 def top_ten(subreddit):
-    """
-    A function that print top ten titles from reddit
-    """
-
-    base_url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-
-    try:
-        response = requests.get(base_url, params={'limit': 10})
-        response.raise_for_status()
-
-        data = response.json()
-        posts = data.get('data', {}).get('children', [])
-
-        if not posts:
-            print("No posts found.")
-        else:
-            for post in posts:
-                title = post['data']['title']
-                print(title)
-
-    except requests.exceptions.RequestException as e:
-        print("An error occurred:", e)
-
-
-top_ten("python")
+    """Print the titles of the 10 hot posts listed for a given subreddit."""
+    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
+    headers = {
+        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
+    }
+    params = {
+        "limit": 10
+    }
+    response = requests.get(url, headers=headers, params=params,
+                            allow_redirects=False)
+    if response.status_code == 404:
+        print("None")
+        return
+    results = response.json().get("data")
+    [print(c.get("data").get("title")) for c in results.get("children")]
